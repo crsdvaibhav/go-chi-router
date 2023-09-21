@@ -1,3 +1,5 @@
+DSN="host=localhost port=5432 user=root password=secret dbname=coffeedb sslmode=disable timezone=UTC connect_timeout=5"
+PORT=8080
 DB_DOCKER_CONTAINER=coffee_db
 BINARY_NAME=crsdcoffeeapi
 
@@ -20,6 +22,14 @@ create_migrations:
 
 migrate-up:
 	sqlx migrate run --database-url "postgres://root:secret@localhost:5432/coffeedb?sslmode=disable"
+
+migrate-down:
+	sqlx migrate revert --database-url "postgres://root:secret@localhost:5432/coffeedb?sslmode=disable"
+
+build:
+	@echo "Building api binary..."
+	go build -o ${BINARY_NAME} cmd/server/*.go
+	@echo "Binary built!"
 
 run:
 	go run cmd/server/main.go
